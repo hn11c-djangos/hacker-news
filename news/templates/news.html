@@ -6,15 +6,17 @@
     <link rel="stylesheet" type="text/css" href="{% static 'news/styles.css' %}">
 </head>
 <body>
-    <h1>News</h1>
-    <div class="login-button">
-        {% if user.is_authenticated %}
-            <span class="username">{{ user.username }}</span>
-            <span class="separator">|</span>
-            <a href="{% url 'logout' %}"><button>Logout</button></a>
-        {% else %}
-            <a href="{% url 'login' %}"><button>Login</button></a>
-        {% endif %}
+    <div class="header">
+        <h1>News</h1>
+        <div class="login-button">
+            {% if user.is_authenticated %}
+                <span class="username">{{ user.username }}</span>
+                <span class="separator">|</span>
+                <a href="{% url 'logout' %}"><button>Logout</button></a>
+            {% else %}
+                <a href="{% url 'login' %}"><button>Login</button></a>
+            {% endif %}
+        </div>
     </div>
     <ul>
         {% for submission in submissions %}

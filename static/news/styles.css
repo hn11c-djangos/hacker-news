@@ -3,6 +3,20 @@
     margin-bottom: 10px; /* Adjust the value as needed */
 }
 
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.login-button .username {
+    margin-right: 10px;
+}
+
+.login-button .separator {
+    margin: 0 5px;
+}
+
 .forgot-password {
     display: block;
     margin-top: 10px; /* Adjust the value as needed */
