@@ -2,14 +2,23 @@
 <html>
 <head>
     <title>Create Account</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'news/styles.css' %}">
 </head>
 <body>
     <h1>Create Account</h1>
-    {% if error %}
-        <p>{{ error }}</p>
-    {% endif %}
+    {% for error in form.username.errors %}
+        <p class="error">{{ error }}</p>
+    {% endfor %}
     <form method="post" action="{% url 'create_account' %}">
         {% csrf_token %}
+        {% if form.non_field_errors %}
+            <div class="error">
+                {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
         <div class="form-group">
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required>
