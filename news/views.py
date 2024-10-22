@@ -4,6 +4,8 @@ from .forms import SubmissionForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
+from users.forms import CreateAccountForm
+from django.db import IntegrityError
 
 
 def news(request):
@@ -27,20 +29,21 @@ def newest(request):
     submissions = Submission.objects.all().order_by('-created')
     return render(request, 'newest.html', {'submissions': submissions})
 
-
 def create_account(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        if User.objects.filter(username=username).exists():
-            return render(request, 'create_account.html', {'error': 'That username is taken. Please choose another.'})
-        try:
-            user = User.objects.create_user(username=username, password=password)
-            auth_login(request, user)
-            return redirect('news')
-        except Exception as e:
-            return render(request, 'create_account.html', {'error': str(e)})
-    return render(request, 'create_account.html')
+        form = CreateAccountForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            try:
+                user = User.objects.create_user(username=username, password=password)
+                auth_login(request, user)
+                return redirect('news')
+            except IntegrityError:
+                form.add_error('username', 'That username conflicts with an existing one. Names are case-insensitive. Please choose another.')
+    else:
+        form = CreateAccountForm()
+    return render(request, 'create_account.html', {'form': form})
 
 def logout(request):
     auth_logout(request)
