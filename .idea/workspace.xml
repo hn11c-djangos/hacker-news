@@ -7,8 +7,6 @@
     <list default="true" id="40b7e414-c9ef-4251-a1bc-401d5efe12ff" name="Changes" comment="merge de develop">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/news/templates/header.html" beforeDir="false" afterPath="$PROJECT_DIR$/news/templates/header.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/users/templates/profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/users/templates/profile.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/users/templates/profile_public.html" beforeDir="false" afterPath="$PROJECT_DIR$/users/templates/profile_public.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

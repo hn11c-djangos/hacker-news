@@ -1,3 +1,15 @@
+{% load socialaccount %}
+{% load static %}
+{% load custom_filters %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hacker News</title>
+    <link rel="stylesheet" href="{% static 'news/styles.css' %}">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
 <header>
     <nav>
         <ul class="nav-left">
@@ -24,12 +36,8 @@
                 <button type="submit">Search</button>
             </form>
         
-        
-        
-        
-                        <!-- Verificamos si el usuario autenticado está disponible -->
+            <!-- Verificamos si el usuario autenticado está disponible -->
             {% if request.user.is_authenticated %}
-                <p>logged_in_user.is_authenticated</p>
                 <div class="user-actions">
                     <a href="/user/" class="username-link{% if request.path == '/user/' %} active{% endif %}">{{ request.user.username }}</a>
                     <span class="separator">|</span>
@@ -42,9 +50,6 @@
                 {% endwith %}
 
             {% else %}
-                <p>else</p>
-                <!-- FEIYANGGGG PODEMOS CAMBIARLO A UN LINK NORMAL ES QUE SINO NO ME IMPRIMER ESTO SI NO ES EN /news/templates/ ???-->
-                
                 <div id="g_id_onload"
                      data-client_id="70954103751-9ktlsv9q03hlpm9g49l6776qd9rpfjtg.apps.googleusercontent.com"
                      data-context="signin"
@@ -61,9 +66,7 @@
                      data-logo_alignment="left">
                 </div>
             {% endif %}
-        
-        
-        
+
         
         </div>
     </nav>
