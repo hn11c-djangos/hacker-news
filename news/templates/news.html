@@ -13,9 +13,7 @@
 <body>
     <!-- Header Section -->
     {% include "header.html" %}
-
-
-
+    
     <!-- Main Content Section -->
     <main>
         <section class="news-list">
@@ -44,7 +42,7 @@
                             <small>({{ submission.url|domain }})</small>
                         </span>
                         <span class="news-details">
-                            X points
+                            {{ submission.point }} points
                             by <a href="{% url 'users:profile' %}?id={{ submission.author }}" class="submissions-link">{{ submission.author }}</a>
                             |
                             <!-- solo se muestra si el usuario autenticado ha votado la submission -->
