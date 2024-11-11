@@ -52,9 +52,11 @@ def newest(request):
     return render(request, 'news.html', {'submissions': submissions, 'voted_submissions': voted_submissions})
 
 def ask(request):
+    voted_submissions = []
     submissions = Submission_ASK.objects.all()
-    logged_in_username = request.user.username if request.user.is_authenticated else None
-    return render(request, 'ask.html', {'submissions': submissions, 'logged_in_username': logged_in_username})
+    if request.user.is_authenticated:
+        voted_submissions = UpvotedSubmission.objects.filter(user=request.user).values_list('submission_id', flat=True)
+    return render(request, 'ask.html', {'submissions': submissions, 'voted_submissions': voted_submissions})
 
 def detail(request, submission_id):
     submission = get_object_or_404(Submission, id=submission_id)

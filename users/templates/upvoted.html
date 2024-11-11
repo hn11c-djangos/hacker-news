@@ -22,6 +22,24 @@
                 <ul>
                     {% for submission in submissions %}
                         <li class="news-item">
+                            <span class="submission-number">{{ forloop.counter }}. </span>
+                            <div class="icon-container">
+                                {% if submission.author == request.user %}
+                                    <span class="red-asterisk">*</span>
+                                    <span class="triangle-icon hidden"></span>
+                                {% elif submission.id in voted_submissions %}
+                                    <span class="triangle-icon hidden "></span>
+                                {% else %}
+                                    {% if user.is_authenticated %}
+                                        <form action="{% url 'users:upvote' submission.id %}" method="post">
+                                            {% csrf_token %}
+                                            <button type="submit" class="triangle-icon"></button>
+                                        </form>
+                                    {% else %}
+                                        <button class="triangle-icon" onclick="showLoginPrompt()"></button>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
                             <span class="news-title">
                                 <a href="{{ submission.url }}">{{ submission.title }}</a>
                                 <small>({{ submission.url|domain }})</small>
