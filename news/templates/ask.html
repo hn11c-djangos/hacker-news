@@ -47,6 +47,11 @@
                         <span class="news-details">
                             X points
                             by <a href="{% url 'users:profile' %}?id={{ submission.author }}" class="submissions-link">{{ submission.author }}</a>
+                            |
+                            {% if submission.id in voted_submissions %}
+                                <a href="{% url 'users:unvote' submission.id %}?next={{ request.path }}" class="submissions-link">unvote</a>
+                                |
+                            {% endif %}
                             | X comments
                         </span>
                     </li>
