@@ -41,23 +41,27 @@ def profile(request):
 
 
 
-
-
 def submissions(request):
     user_id = request.GET.get('id')
     user = get_object_or_404(User, username=user_id)
-    submissions = Submission.objects.filter(author=user)  # Usa el nombre correcto del campo
-    # si es el usuario autenticado, se usa request.user
+    submissions = Submission.objects.filter(author=user)
     voted_submissions = []
     if request.user.is_authenticated:
         voted_submissions = UpvotedSubmission.objects.filter(user=request.user).values_list('submission_id', flat=True)
-    return render(request, 'submissions.html', {'submissions': submissions, 'username': user.username, 'voted_submissions': voted_submissions})
 
+    for submission in submissions:
+        submission.created_age = calculate_account_age(submission.created)
+
+    return render(request, 'submissions.html', {'submissions': submissions, 'username': user.username, 'voted_submissions': voted_submissions})
 
 @login_required
 def hidden_submissions(request):
     hidden_submissions_ids = HiddenSubmission.objects.filter(user=request.user).values_list('submission', flat=True)
     submissions = Submission.objects.filter(id__in=hidden_submissions_ids)
+
+    for submission in submissions:
+        submission.created_age = calculate_account_age(submission.created)
+
     return render(request, 'hidden.html', {'submissions': submissions, 'username': request.user.username})
 
 @login_required
@@ -91,4 +95,8 @@ def unvote(request, submission_id):
 def upvoted_submissions(request):
     voted_submissions_ids = UpvotedSubmission.objects.filter(user=request.user).values_list('submission_id', flat=True)
     submissions = Submission.objects.filter(id__in=voted_submissions_ids)
+
+    for submission in submissions:
+        submission.created_age = calculate_account_age(submission.created)
+
     return render(request, 'upvoted.html', {'submissions': submissions})
