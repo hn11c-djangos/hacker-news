@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Submission, HiddenSubmission, UpvotedSubmission
 from .models import Submission_URL, Submission_ASK
 from .forms import SubmissionForm
+from .utils import calculate_account_age
 
 
 def news(request):
@@ -10,11 +11,32 @@ def news(request):
         hidden_submissions = HiddenSubmission.objects.filter(user=request.user).values_list('submission', flat=True)
         submissions = Submission.objects.exclude(id__in=hidden_submissions).order_by('title')
         voted_submissions = UpvotedSubmission.objects.filter(user=request.user).values_list('submission_id', flat=True)
-        return render(request, 'news.html', {'submissions': submissions, 'voted_submissions': voted_submissions})
+        submissions_with_age = []
+        for submission in submissions:
+            account_age = calculate_account_age(submission.author.date_joined)
+            submissions_with_age.append({
+                'submission': submission,
+                'account_age': account_age
+            })
+        return render(request, 'news.html', {
+            'submissions_with_age': submissions_with_age,
+            'hidden_submissions': hidden_submissions,
+            'voted_submissions': voted_submissions
+        })
     else:
         submissions = Submission.objects.all().order_by('title')
-        return render(request, 'news.html', {'submissions': submissions})
-
+        submissions_with_age = []
+        for submission in submissions:
+            account_age = calculate_account_age(submission.author.date_joined)
+            submissions_with_age.append({
+                'submission': submission,
+                'account_age': account_age
+            })
+        return render(request, 'news.html', {
+            'submissions_with_age': submissions_with_age,
+            'hidden_submissions': [],
+            'voted_submissions': []
+        })
 
 @login_required
 def submit(request):
