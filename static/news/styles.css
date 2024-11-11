@@ -222,6 +222,22 @@ a.submissions-link:hover {
     text-decoration: underline; /* Optional: Add underline on hover */
 }
 
+
+
+
+
+
+
+.icon-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-right: 2px;
+    margin-top: -15px; /* Ajusta este valor según sea necesario */
+
+}
+
+
 /* Triángulo pequeño a la izquierda del título */
 .triangle-icon {
     all: unset;
@@ -233,7 +249,6 @@ a.submissions-link:hover {
     border-right: 6px solid transparent;
     border-bottom: 10px solid #777;
     margin-right: 10px;
-    margin-bottom: 6px;
     align-self: center;
 }
 
@@ -241,29 +256,12 @@ a.submissions-link:hover {
     visibility: hidden; /* Mantiene el espacio pero hace invisible el triángulo */
 }
 
-/* Ajustar el contenedor de .news-item para alinear los elementos en fila
-.news-item {
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-    display: flex;
-}
-*/
-
-
-
-.icon-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    margin-right: 3px;
-}
-
 .red-asterisk {
     color: #ff6600;
     font-weight: bold;
     font-size: 22px; /* Adjust the font size as needed */
     position: absolute;
-    top: -5px;
+    top: 2px;
     left: 3px;
     z-index: 1; /* Ensure the asterisk is on top */
 }
@@ -278,4 +276,9 @@ a.submissions-link:hover {
 
 .news-title {
     flex-grow: 1; /* Allow the title to take up available space */
+}
+
+.submission-number {
+    color: #777;
+    margin-right: 5px;
 }

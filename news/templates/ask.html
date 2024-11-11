@@ -22,6 +22,7 @@
             <ul>
                 {% for submission in submissions %}
                     <li class="news-item">
+                        <span class="submission-number">{{ forloop.counter }}. </span>
                         <div class="icon-container">
                             {% if submission.author == request.user %}
                                 <span class="red-asterisk">*</span>
