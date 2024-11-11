@@ -256,6 +256,10 @@ a.submissions-link:hover {
     visibility: hidden; /* Mantiene el espacio pero hace invisible el triángulo */
 }
 
+.triangle-icon.unlogged {
+    margin-top: 15px; /* Ajusta este valor según sea necesario */
+}
+
 .red-asterisk {
     color: #ff6600;
     font-weight: bold;
