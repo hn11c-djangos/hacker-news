@@ -20,18 +20,18 @@
     <main>
         <section class="news-list">
             <ul>
-                {% for submission in submissions_with_age %}
+                {% for submission in submissions %}
                     <li class="news-item">
                         <span class="submission-number">{{ forloop.counter }}. </span>
                         <div class="icon-container">
-                            {% if submission.submission.author == request.user %}
+                            {% if submission.author == request.user %}
                                 <span class="red-asterisk">*</span>
                                 <span class="triangle-icon hidden"></span>
-                            {% elif submission.submission.id in voted_submissions %}
+                            {% elif submission.id in voted_submissions %}
                                 <span class="triangle-icon hidden "></span>
                             {% else %}
                                 {% if user.is_authenticated %}
-                                    <form action="{% url 'users:upvote' submission.submission.id %}" method="post">
+                                    <form action="{% url 'users:upvote' submission.id %}" method="post">
                                         {% csrf_token %}
                                         <button type="submit" class="triangle-icon"></button>
                                     </form>
@@ -41,22 +41,22 @@
                             {% endif %}
                         </div>
                         <span class="news-title">
-                            <a href="{{ submission.submission.url }}"> {{ submission.submission.title }}</a>
-                            <small>({{ submission.submission.url|domain }})</small>
+                            <a href="{{ submission.url }}"> {{ submission.title }}</a>
+                            <small>({{ submission.url|domain }})</small>
                         </span>
                         <span class="news-details">
-                            {{ submission.submission.point }} points
-                            by <a href="{% url 'users:profile' %}?id={{ submission.submission.author }}" class="submissions-link">{{ submission.submission.author }}</a>
-                            {{ submission.account_age }}
+                            {{ submission.point }} points
+                            by <a href="{% url 'users:profile' %}?id={{ submission.author }}" class="submissions-link">{{ submission.author }}</a>
+                            {{ submission.created_age }}
                             |
                             <!-- solo se muestra si el usuario autenticado ha votado la submission -->
-                            {% if submission.submission.id in voted_submissions %}
-                                <a href="{% url 'users:unvote' submission.submission.id %}?next={{ request.submission.path }}" class="submissions-link">unvote</a>
+                            {% if submission.id in voted_submissions %}
+                                <a href="{% url 'users:unvote' submission.id %}?next={{ request.path }}" class="submissions-link">unvote</a>
                                 |
                             {% endif %}
                             <!-- solo se muestra si el usuario autenticado es el autor de la submission -->
                             {% if user.is_authenticated %}
-                                <a href="{% url 'news:hide_submission' submission.submission.id %}" class="submissions-link">hide</a>
+                                <a href="{% url 'news:hide_submission' submission.id %}" class="submissions-link">hide</a>
                             {% else %}
                                 <a onclick="showLoginPrompt()" class="submissions-link">hide</a>
                             {% endif %}
@@ -64,8 +64,8 @@
                             <!-- todo: numero de comentarios-->
                             | X comments
                             <!-- solo se muestra si el usuario autenticado es el autor de la submission -->
-                            {% if submission.submission.author == request.user %}
-                                | <a href="{% url 'news:delete_submission' submission.submission.id %}" class="submissions-link" onclick="confirmDelete()">delete</a>
+                            {% if submission.author == request.user %}
+                                | <a href="{% url 'news:delete_submission' submission.id %}" class="submissions-link" onclick="confirmDelete()">delete</a>
                             {% endif %}
                         </span>
                     </li>
