@@ -1,5 +1,7 @@
 from django.utils.timezone import now
-from datetime import timedelta
+from datetime import timedelta, datetime
+from django.utils import timezone
+
 
 def calculate_account_age(date_joined):
     delta = now() - date_joined
@@ -13,3 +15,8 @@ def calculate_account_age(date_joined):
         return f"{delta.days // 30} months ago"
     else:
         return f"{delta.days // 365} years ago"
+
+
+def calculate_score(submission):
+    age_in_minutes = (timezone.now() - submission.created).total_seconds() / 60
+    return submission.point - age_in_minutes

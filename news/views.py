@@ -4,20 +4,23 @@ from .models import Submission, HiddenSubmission, UpvotedSubmission
 from .models import Submission_URL, Submission_ASK
 from .forms import SubmissionForm
 from .utils import calculate_account_age
+from .utils import calculate_score
 
 
 def news(request):
     if request.user.is_authenticated:
         hidden_submissions = HiddenSubmission.objects.filter(user=request.user).values_list('submission', flat=True)
-        submissions = Submission.objects.exclude(id__in=hidden_submissions).order_by('title')
+        submissions = Submission.objects.exclude(id__in=hidden_submissions)
         voted_submissions = UpvotedSubmission.objects.filter(user=request.user).values_list('submission_id', flat=True)
     else:
-        submissions = Submission.objects.all().order_by('title')
+        submissions = Submission.objects.all()
         hidden_submissions = []
         voted_submissions = []
 
     for submission in submissions:
         submission.created_age = calculate_account_age(submission.created)
+
+    submissions = sorted(submissions, key=calculate_score, reverse=True)
 
     return render(request, 'news.html', {
         'submissions': submissions,
