@@ -48,7 +48,9 @@
                                 <small>({{ submission.url|domain }})</small>
                             </span>
                             <span class="news-details">
-                                X points by <a href="{% url 'users:profile' %}?id={{ submission.author }}" class="submissions-link">{{ submission.author }}</a> | X comments
+                                {{ submission.point }} points
+                                by <a href="{% url 'users:profile' %}?id={{ submission.author }}" class="submissions-link">{{ submission.author }}</a>
+                                | X comments
                                 {% if submission.author == request.user %}
                                     | <a href="{% url 'news:delete_submission' submission.id %}" class="submissions-link" onclick="confirmDelete(event)">delete</a>
                                 {% endif %}

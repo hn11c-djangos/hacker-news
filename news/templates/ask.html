@@ -45,7 +45,7 @@
                             <small>({{ submission.url|domain }})</small>
                         </span>
                         <span class="news-details">
-                            X points
+                            {{ submission.point }} points
                             by <a href="{% url 'users:profile' %}?id={{ submission.author }}" class="submissions-link">{{ submission.author }}</a>
                             |
                             {% if submission.id in voted_submissions %}

@@ -7,6 +7,10 @@
     <list default="true" id="40b7e414-c9ef-4251-a1bc-401d5efe12ff" name="Changes" comment="merge de develop">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/news/templates/ask.html" beforeDir="false" afterPath="$PROJECT_DIR$/news/templates/ask.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/news/templates/news.html" beforeDir="false" afterPath="$PROJECT_DIR$/news/templates/news.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/users/templates/hidden.html" beforeDir="false" afterPath="$PROJECT_DIR$/users/templates/hidden.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/users/templates/submissions.html" beforeDir="false" afterPath="$PROJECT_DIR$/users/templates/submissions.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/users/templates/upvoted.html" beforeDir="false" afterPath="$PROJECT_DIR$/users/templates/upvoted.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -156,7 +160,7 @@
       <workItem from="1729756872896" duration="5322000" />
       <workItem from="1731018773971" duration="106000" />
       <workItem from="1731018885650" duration="2816000" />
-      <workItem from="1731316106716" duration="5237000" />
+      <workItem from="1731316106716" duration="5633000" />
     </task>
     <task id="LOCAL-00001" summary="Revert &quot;modelos creados&quot;&#10;&#10;This reverts commit e9432f58">
       <option name="closed" value="true" />
