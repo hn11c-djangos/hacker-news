@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from news.models import Submission, HiddenSubmission, UpvotedSubmission  # Assuming you have a Submission model in the news app
 from .forms import ProfileForm
 from .utils import calculate_account_age
+from news.utils import calculate_score
 
 
 def profile(request):
@@ -52,6 +53,7 @@ def submissions(request):
     for submission in submissions:
         submission.created_age = calculate_account_age(submission.created)
 
+    submissions = sorted(submissions, key=calculate_score, reverse=True)
     return render(request, 'submissions.html', {'submissions': submissions, 'username': user.username, 'voted_submissions': voted_submissions})
 
 @login_required
@@ -62,6 +64,7 @@ def hidden_submissions(request):
     for submission in submissions:
         submission.created_age = calculate_account_age(submission.created)
 
+    submissions = sorted(submissions, key=calculate_score, reverse=True)
     return render(request, 'hidden.html', {'submissions': submissions, 'username': request.user.username})
 
 @login_required
@@ -99,4 +102,5 @@ def upvoted_submissions(request):
     for submission in submissions:
         submission.created_age = calculate_account_age(submission.created)
 
+    submissions = sorted(submissions, key=calculate_score, reverse=True)
     return render(request, 'upvoted.html', {'submissions': submissions})

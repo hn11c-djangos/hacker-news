@@ -75,6 +75,7 @@ def ask(request):
     for submission in submissions:
         submission.created_age = calculate_account_age(submission.created)
 
+    submissions = sorted(submissions, key=calculate_score, reverse=True)
     return render(request, 'ask.html', {'submissions': submissions, 'voted_submissions': voted_submissions})
 
 
