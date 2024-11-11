@@ -57,6 +57,10 @@ def newest(request):
         voted_submissions = UpvotedSubmission.objects.filter(user=request.user).values_list('submission_id', flat=True)
     else:
         submissions = Submission.objects.all().order_by('-created')
+
+    for submission in submissions:
+        submission.created_age = calculate_account_age(submission.created)
+
     return render(request, 'news.html', {'submissions': submissions, 'voted_submissions': voted_submissions})
 
 def ask(request):
@@ -64,7 +68,12 @@ def ask(request):
     submissions = Submission_ASK.objects.all()
     if request.user.is_authenticated:
         voted_submissions = UpvotedSubmission.objects.filter(user=request.user).values_list('submission_id', flat=True)
+
+    for submission in submissions:
+        submission.created_age = calculate_account_age(submission.created)
+
     return render(request, 'ask.html', {'submissions': submissions, 'voted_submissions': voted_submissions})
+
 
 def detail(request, submission_id):
     submission = get_object_or_404(Submission, id=submission_id)
