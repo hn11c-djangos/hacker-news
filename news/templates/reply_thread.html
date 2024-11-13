@@ -11,7 +11,11 @@
             
             <!-- Mostrar autor y tiempo de creación -->
             <strong>{{ reply.author.username }}</strong> - 
-            {{ reply.created_at|timesince }} ago
+            <span class="comment-time">
+                <a href="{% url 'news:reply_to_comment' reply.id %}">
+                    {{ reply.created_at|timesince }} ago
+                </a>
+            </span>&nbsp;
 
             <!-- Botones Editar y Eliminar solo si el autor es el usuario o el perfil actual -->
             {% if reply.author == request.user %}

@@ -14,14 +14,7 @@
     {% include "header.html" %}
 
     <main>
-        <!-- Bloque para mostrar mensajes de éxito o error -->
-        {% if messages %}
-            <ul>
-                {% for message in messages %}
-                    <li class="alert {{ message.tags }}">{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+        
 
         <section class="news-list">
             <ul>
@@ -111,7 +104,11 @@
     
                     <span class="comment-author">
                         by <a href="{% url 'users:profile' %}?id={{ comment.author }}" class="submissions-link">{{ comment.author }}</a>
-                         <span class="comment-time">{{ comment.created_at|timesince }} ago</span>&nbsp;
+                        <span class="comment-time">
+                            <a href="{% url 'news:reply_to_comment' comment.id %}">
+                                {{ comment.created_at|timesince }} ago
+                            </a>
+                        </span>&nbsp;
                     </span>
     
                     {% if comment.author == request.user %}

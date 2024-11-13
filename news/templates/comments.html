@@ -1,0 +1,78 @@
+{% load socialaccount %}
+{% load static %}
+{% load custom_filters %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Comments</title>
+    <link rel="stylesheet" href="{% static 'news/styles.css' %}">
+</head>
+<body>
+    <!-- Header Section -->
+    {% include "header.html" %}
+
+    <main>
+        <!-- Bloque para mostrar mensajes de éxito o error -->
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li class="alert {{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <section class="comments-list">
+            <ul>
+                {% for comment in comments %}
+                    <li class="comment-item">
+                        
+                        <p class="comment-meta">
+                            {% if comment.author == request.user %}
+                                <span class="red-asterisk-comments">*</span>
+                                <span class="triangle-icon hidden "></span>
+                            {% else %}
+                                <span class="triangle-icon"></span>
+                            {% endif %}
+            
+                            <span class="comment-author">
+                                by <a href="{% url 'users:profile' %}?id={{ comment.author }}" class="submissions-link">{{ comment.author }}</a>
+                                 <span class="comment-time">
+                                     <!-- Aquí hacemos que la fecha sea un enlace a la vista de respuesta -->
+                                     <a href="{% url 'news:reply_to_comment' comment.id %}">{{ comment.created_at|timesince }} ago</a>
+                                 </span>&nbsp;
+                            </span>
+            
+                            {% if comment.author == request.user %}
+                                |&nbsp; <a href="{% url 'news:edit_comment' comment.id %}" class="edit-link">Edit</a>&nbsp;
+                                |&nbsp; <a href="{% url 'news:confirm_delete' comment.id %}" class="delete-link">Delete</a>
+                            {% endif %}
+                            {% if comment.parent %}
+                            | <a href="{% url 'news:comment_parent' comment.parent.id %}" class="comment-link">Parent</a>
+                            {% else %}
+                            | <a href="{% url 'news:submission_detail' comment.submission.id %}" class="comment-link">Parent</a>
+                            {% endif %}
+        
+                        <!-- Enlace al comentario sobre el que se hizo el reply -->
+                        | <strong>Comment on:</strong> 
+                        <a href="{% url 'news:submission_detail' comment.submission.id %}">{{ comment.submission.title }}</a>
+                        </p>
+
+                        <div class="comment-content">
+                            <p class="comment-text">{{ comment.text }}</p>
+
+                            {% if comment.author == request.user %}
+                                | <a href="{% url 'news:edit_comment' comment.id %}" class="edit-link">Edit</a>
+                                | <a href="{% url 'news:confirm_delete' comment.id %}" class="delete-link">Delete</a>
+                            {% endif %}
+                        </div>
+                    </li>
+                {% empty %}
+                    <p>No comments available.</p>
+                {% endfor %}
+            </ul>
+        </section>
+    </main>
+</body>
+</html>

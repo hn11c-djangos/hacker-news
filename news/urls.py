@@ -10,6 +10,7 @@ urlpatterns = [
     path('delete/<int:submission_id>/', views.delete_submission, name='delete_submission'),  # Add this line
     path('search/', views.search, name='search'),
     path('submit/', views.submit, name='submit'),
+    path('comments/', views.comments, name='comments'),
     path('<int:submission_id>/', views.submission_details, name='submission_detail'),
     path('confirm-delete/<int:comment_id>/', views.confirm_delete, name='confirm_delete'),
     path('delete-comment/<int:comment_id>/', views.delete_comment, name='delete_comment'),

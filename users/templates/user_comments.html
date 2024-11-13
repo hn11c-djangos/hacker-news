@@ -24,7 +24,11 @@
                                 <span class="triangle-icon"></span>
                             {% endif %}
                             <strong>{{ comment.author.username }}</strong> - 
-                            {{ comment.created_at|timesince }} ago
+                            <span class="comment-time">
+                                <a href="{% url 'news:reply_to_comment' comment.id %}">
+                                    {{ comment.created_at|timesince }} ago
+                                </a>
+                            </span>&nbsp;
                             
                             <!-- Edit and Delete links only visible to the comment author -->
                             {% if comment.author == user %}

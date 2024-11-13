@@ -19,7 +19,9 @@
             <li><a href="/news" class="head {% if request.path == '/news/' %}{% endif %}">Hacker News</a></li>
             <li><a href="/newest" class="{% if request.path == '/newest/' %}active{% endif %}">new</a></li>
             <li><a href="#">threads</a></li>
-            <li><a href="#">comments</a></li>
+            <li><a href="/comments" class="{% if request.path == '/comments/' %}active{% endif %}">
+                comments
+            </a></li>
             <li><a href="/ask" class="{% if request.path == '/ask/' %}active{% endif %}">ask</a></li>
 
             {% if user.is_authenticated %}

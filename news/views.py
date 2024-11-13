@@ -243,3 +243,7 @@ def comment_parent(request, comment_id):
         'parent_comment': parent_comment,
         'replies': replies
     })
+
+def comments(request):
+    comments = Comment.objects.all().order_by('-created_at')  # Ordenar por la fecha de creación
+    return render(request, 'comments.html', {'comments': comments})
