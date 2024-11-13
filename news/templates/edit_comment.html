@@ -1,3 +1,4 @@
+{% load custom_filters %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -20,10 +21,9 @@
             <strong>{{ comment.author.username }}</strong>&nbsp;
             <span class="comment-time">
                 <a href="{% url 'news:reply_to_comment' comment.id %}">
-                    {{ comment.created_at|timesince }} ago
+                    {{ comment.created_at|custom_timesince }} ago
                 </a>
             </span>&nbsp;
-
             {% if comment.author == request.user %}
                 | <a href="{% url 'news:edit_comment' comment.id %}" class="comment-link">edit</a>
                 | <a href="{% url 'news:confirm_delete' comment.id %}" class="comment-link" onclick="confirmDelete(event)">delete</a>

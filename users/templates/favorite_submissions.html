@@ -90,12 +90,17 @@
                                 {% if comment.author == request.user %}
                                     <span class="red-asterisk-comments">*</span>
                                     <span class="triangle-icon hidden "></span>
+                                {% elif comment.id in voted_comments %}
+                                    <span class="triangle-icon hidden"></span>
                                 {% else %}
-                                    <span class="triangle-icon"></span>
+                                    <form action="{% url 'users:upvote_comment' comment.id %}?next={{ request.get_full_path }}" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" class="triangle-icon"></button>
+                                    </form>
                                 {% endif %}
+
                                 <strong>{{ comment.author.username }}</strong>
                                 <span class="comment-time">{{ comment.created_at }}</span>
-
                                 {% if comment.author == request.user %}
                                     | <a href="{% url 'news:edit_comment' comment.id %}" class="comment-link">edit</a>
                                     | <a href="{% url 'news:confirm_delete' comment.id %}" class="comment-link" onclick="confirmDelete(event)">delete</a>
@@ -104,7 +109,6 @@
                             </p>
                             <div class="comment-content">
                                 <p class="comment-text">{{ comment.text }}</p>
-                                <a href="#reply" class="reply-link">reply</a>
                             </div>
                         </div>
                     {% empty %}

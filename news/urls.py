@@ -19,5 +19,5 @@ urlpatterns = [
     path('submission/<int:submission_id>/edit/', views.edit_submission, name='edit_submission'),
     path('reply/<int:comment_id>/', views.reply_to_comment, name='reply_to_comment'),
     path('comment/<int:comment_id>/parent/', views.comment_parent, name='comment_parent'),
-
+    path('threads/', views.threads, name='threads'),
 ]

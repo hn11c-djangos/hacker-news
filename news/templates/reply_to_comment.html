@@ -1,3 +1,4 @@
+{% load custom_filters %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -21,7 +22,7 @@
                 <strong>{{ original_comment.author.username }}</strong>
                 <span class="comment-time">
                     <a href="{% url 'news:reply_to_comment' original_comment.id %}">
-                        {{ original_comment.created_at|timesince }} ago
+                        {{ original_comment.created_at|custom_timesince }} ago
                     </a>
                 </span>&nbsp;
                 {% if original_comment.author == request.user %}

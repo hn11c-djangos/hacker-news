@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from users.utils import calculate_date
-from .models import Submission, HiddenSubmission, UpvotedSubmission, Comment
+from .models import Submission, HiddenSubmission, UpvotedSubmission, Comment, UpvotedComment
 from .models import Submission_URL, Submission_ASK
 from .forms import SubmissionForm, CommentForm, EditSubmissionForm
 from django.http import JsonResponse, Http404, HttpResponseRedirect
@@ -20,9 +20,6 @@ def news(request):
         submissions = Submission.objects.all()
         hidden_submissions = []
         voted_submissions = []
-
-    for submission in submissions:
-        submission.created_age = calculate_account_age(submission.created)
 
     submissions = sorted(submissions, key=calculate_score, reverse=True)
 
@@ -78,9 +75,6 @@ def ask(request):
     if request.user.is_authenticated:
         voted_submissions = UpvotedSubmission.objects.filter(user=request.user).values_list('submission_id', flat=True)
 
-    for submission in submissions:
-        submission.created_age = calculate_account_age(submission.created)
-
     submissions = sorted(submissions, key=calculate_score, reverse=True)
     return render(request, 'ask.html', {'submissions': submissions, 'voted_submissions': voted_submissions})
 
@@ -111,35 +105,48 @@ def search(request):
         results = Submission.objects.filter(title__icontains=query)
     else:
         results = Submission.objects.none()
-    return render(request, 'search_results.html', {'results': results})
+
+    results = sorted(results, key=calculate_score, reverse=True)
+
+    voted_submissions = []
+    if request.user.is_authenticated:
+        voted_submissions = UpvotedSubmission.objects.filter(user=request.user).values_list('submission_id', flat=True)
+
+    return render(request, 'search_results.html', {'results': results, 'voted_submissions': voted_submissions})
 
 
 def submission_details(request, submission_id):
     submission = get_object_or_404(Submission, id=submission_id)
-    comments = submission.comments.all()
     comments = Comment.objects.filter(submission=submission, parent=None)
-    submission.comment_count = submission.comments.count()  # Actualiza el contador de comentarios
+    
+    voted_comments = []
+    submissionVoted = False
+    if request.user.is_authenticated:
+        voted_comments = UpvotedComment.objects.filter(user=request.user).values_list('comment_id', flat=True)
+        submissionVoted = UpvotedSubmission.objects.filter(user=request.user, submission=submission).exists()
 
-    # Procesar el formulario de comentarios
     if request.method == 'POST':
-        if not request.user.is_authenticated:  # Verifica si el usuario no está autenticado
-            messages.error(request, "Debes estar logueado para comentar.")  # Mensaje de error
+        if not request.user.is_authenticated:
+            messages.error(request, "You must be logged in to comment.")
             return redirect('news:submission_detail', submission_id=submission.id)
 
-        form = CommentForm(request.POST)  # Instancia del formulario con los datos POST
-        if form.is_valid():  # Verifica que el formulario sea válido
+        form = CommentForm(request.POST)
+        if form.is_valid():
             comment = form.save(commit=False)
-            comment.submission = submission  # Relaciona el comentario con la publicación
-            comment.author = request.user  # Establece el autor del comentario como el usuario logueado
-            comment.save()  # Guarda el comentario en la base de datos
-
-            # Redirige para evitar que el comentario se reenvíe al actualizar la página
+            comment.author = request.user
+            comment.submission = submission
+            comment.save()
             return redirect('news:submission_detail', submission_id=submission.id)
-
     else:
-        form = CommentForm()  # Si es un GET, el formulario estará vacío
+        form = CommentForm()
 
-    return render(request, 'submission_details.html', {'submission': submission, 'comments': comments, 'form': form})
+    return render(request, 'submission_details.html', {
+        'submission': submission,
+        'comments': comments,
+        'form': form,
+        'voted_comments': voted_comments,
+        'submissionVoted': submissionVoted
+    })
 
 @login_required
 def confirm_delete(request, comment_id):
@@ -205,20 +212,30 @@ def submissions_by_domain(request):
     if request.user.is_authenticated:
         voted_submissions = UpvotedSubmission.objects.filter(user=request.user).values_list('submission_id', flat=True)
 
-    for submission in submissions:
-        submission.created_age = calculate_account_age(submission.created)
-
     return render(request, 'submissions_by_domain.html', {
         'submissions': submissions,
         'domain': domain,
         'voted_submissions': voted_submissions
     })
 
+def comments(request):
+    comments = Comment.objects.all().order_by('-created_at')  # Ordenar por fecha de creación, de más nuevo a más antiguo
+    voted_comments = []
+    if request.user.is_authenticated:
+        voted_comments = UpvotedComment.objects.filter(user=request.user).values_list('comment_id', flat=True)
+    return render(request, 'comments.html', {'comments': comments, 'voted_comments': voted_comments})
+
+@login_required
+def threads(request):
+    comments = Comment.objects.filter(author=request.user,parent__isnull=True).order_by('-created_at')
+    voted_comments = []
+    if request.user.is_authenticated:
+        voted_comments = UpvotedComment.objects.filter(user=request.user).values_list('comment_id', flat=True)
+    return render(request, 'threads.html', {'comments': comments, 'voted_comments': voted_comments})
 
 @login_required
 def edit_submission(request, submission_id):
     submission = get_object_or_404(Submission, id=submission_id, author=request.user)
-    submission.created_age = calculate_account_age(submission.created)
     if request.method == 'POST':
         form = EditSubmissionForm(request.POST, instance=submission)
         if form.is_valid():

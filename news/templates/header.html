@@ -18,10 +18,10 @@
             <li><a href="/news" class="logo">Y</a></li>
             <li><a href="/news" class="head {% if request.path == '/news/' %}{% endif %}">Hacker News</a></li>
             <li><a href="/newest" class="{% if request.path == '/newest/' %}active{% endif %}">new</a></li>
-            <li><a href="#">threads</a></li>
-            <li><a href="/comments" class="{% if request.path == '/comments/' %}active{% endif %}">
-                comments
-            </a></li>
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'news:threads' %}" class="{% if request.path == '/news/threads/' %}active{% endif %}">threads</a></li>
+            {% endif %}
+            <li><a href="{% url 'news:comments' %}" class="{% if request.path == '/news/comments/' %}active{% endif %}">comments</a></li>
             <li><a href="/ask" class="{% if request.path == '/ask/' %}active{% endif %}">ask</a></li>
 
             {% if user.is_authenticated %}
@@ -36,17 +36,17 @@
                 <input type="text" name="q" placeholder="Search">
                 <button type="submit">Search</button>
             </form>
-        
-        
-        
-        
-        
+
+
+
+
+
             <!-- Verificamos si el usuario autenticado está disponible -->
             {% if request.user.is_authenticated %}
                 <div class="user-actions">
                     <a href="/user/" class="username-link{% if request.path == '/user/' %} active{% endif %}">
                         {{ request.user.username }} ({{ request.user.profile.karma }})
-                    </a>                   
+                    </a>
                     <span class="separator">|</span>
                     <a href="{% url 'account_logout' %}">logout</a>
                 </div>
@@ -72,10 +72,10 @@
                      data-logo_alignment="left">
                 </div>
             {% endif %}
-        
-        
-        
-        
+
+
+
+
         </div>
     </nav>
 </header>

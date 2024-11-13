@@ -18,14 +18,41 @@
 
         <section class="news-list">
             <ul>
-                <li class="news-item">
-                    <div class="icon-container">
-                        {% if submission.author == request.user %}
-                            <span class="red-asterisk">*</span>
-                            <span class="triangle-icon hidden"></span> 
-                        {% elif submission.id in voted_submissions %}
-                            <span class="triangle-icon hidden "></span>
-                        {% else %}
+                    <li class="news-item">
+                        <div class="icon-container">
+                            {% if submission.author == request.user %}
+                                <span class="red-asterisk">*</span>
+                                <span class="triangle-icon hidden"></span> 
+                            {% elif submissionVoted %}
+                                <span class="triangle-icon hidden "></span>
+                            {% else %}
+                                {% if user.is_authenticated %}
+                                    <form action="{% url 'users:upvote_submission' submission.id %}?next={{ request.path }}" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" class="triangle-icon"></button>
+                                    </form>
+                                {% else %}
+                                    <button class="triangle-icon unlogged" onclick="showLoginPrompt()"></button>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                        <span class="news-title">
+                            {% if submission.domain %}
+                                <a href="{{ submission.url }}"> {{ submission.title }}</a>
+                                <a href="{% url 'news:submissions_by_domain' %}?domain={{ submission.domain }}" class="domain-link">({{ submission.domain }})</a>
+                            {% else %}
+                                <a href="{% url 'news:submission_detail' submission.id %}" class="submissions-link">{{ submission.title }}</a>
+                            {% endif %}
+                        </span>
+                        <span class="news-details">
+                            {{ submission.point }} {{ submission.point|pluralize:"point,points" }}
+                            by <a href="{% url 'users:profile' %}?id={{ submission.author }}" class="submissions-link">{{ submission.author }}</a>
+                            <a href="{% url 'news:submission_detail' submission.id %}" class="submissions-link">{{ submission.created|custom_timesince }} ago</a>
+                            {% if submissionVoted %}
+                                <a href="{% url 'users:unvote_submission' submission.id %}?next={{ request.path }}" class="submissions-link">unvote</a>
+                                |
+                            {% endif %}
+                            <!-- solo se muestra si el usuario autenticado es el autor de la submission -->
                             {% if user.is_authenticated %}
                                 <form action="{% url 'users:upvote_submission' submission.id %}?next={{ request.path }}" method="post">
                                     {% csrf_token %}
@@ -98,8 +125,13 @@
                     {% if comment.author == request.user %}
                         <span class="red-asterisk-comments">*</span>
                         <span class="triangle-icon hidden "></span>
+                    {% elif comment.id in voted_comments %}
+                        <span class="triangle-icon hidden"></span>
                     {% else %}
-                        <span class="triangle-icon"></span>
+                        <form action="{% url 'users:upvote_comment' comment.id %}?next={{ request.path }}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="triangle-icon"></button>
+                        </form>
                     {% endif %}
     
                     <span class="comment-author">
@@ -110,10 +142,13 @@
                             </a>
                         </span>&nbsp;
                     </span>
+                    {% if comment.id in voted_comments %}
+                        | <a href="{% url 'users:unvote_comment' comment.id %}?next={{ request.path }}" class="comment-link">unvote</a>
+                    {% endif %}
     
                     {% if comment.author == request.user %}
-                        |&nbsp; <a href="{% url 'news:edit_comment' comment.id %}" class="edit-link">Edit</a>&nbsp;
-                        |&nbsp; <a href="{% url 'news:confirm_delete' comment.id %}" class="delete-link">Delete</a>
+                        |&nbsp; <a href="{% url 'news:edit_comment' comment.id %}" class="comment-link">edit</a>&nbsp;
+                        |&nbsp; <a href="{% url 'news:confirm_delete' comment.id %}" class="comment-link">delete</a>
                     {% endif %}
                     {% if comment.parent %}
                     | <a href="{% url 'news:comment_parent' comment.parent.id %}" class="comment-link">Parent</a>
@@ -125,14 +160,14 @@
                 | <strong>Comment on:</strong> 
                 <a href="{% url 'news:submission_detail' submission.id %}">{{ submission.title }}</a>
                 </p>
-    
+
                 <div class="comment-content">
                     <p class="comment-text">{{ comment.text }}</p>
                     <a href="{% url 'news:reply_to_comment' comment.id %}" class="reply-link">reply</a>
     
                     <!-- Mostrar respuestas (replies) de forma anidada -->
                     <div class="replies" style="margin-left: 20px;">
-                        {% include 'reply_thread.html' with replies=comment.replies.all %}
+                        {% include 'reply_thread.html' with replies=comment.replies.all voted_comments=voted_comments%}
                     </div>
                 </div>
             </div>

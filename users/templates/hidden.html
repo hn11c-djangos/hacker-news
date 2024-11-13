@@ -51,7 +51,7 @@
                             <span class="news-details">
                                 {{ submission.point }} {{ submission.point|pluralize:"point,points" }}
                                 by <a href="{% url 'users:profile' %}?id={{ submission.author }}" class="submissions-link">{{ submission.author }}</a>
-                                <a href="{% url 'news:submission_detail' submission.id %}" class="submissions-link">{{ submission.created_age }}</a>
+                                <a href="{% url 'news:submission_detail' submission.id %}" class="submissions-link">{{ submission.created|custom_timesince }} ago</a>
                                 {% if submission.id in voted_submissions %}
                                     | <a href="{% url 'users:unvote_submission' submission.id %}?next={{ request.path }}" class="submissions-link">unvote</a>
                                 {% endif %}

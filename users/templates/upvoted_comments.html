@@ -1,0 +1,44 @@
+{% load socialaccount %}
+{% load static %}
+{% load custom_filters %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voted Submissions</title>
+    <link rel="stylesheet" href="{% static 'news/styles.css' %}">
+</head>
+<body>
+    <!-- Header Section -->
+    {% include "header.html" %}
+
+    <!-- Main Content Section -->
+    <main>
+        <div class="submissions-container">
+            <h2>{{ user.username }}'s Voted Comments</h2>
+            <div id="comments">
+                {% for comment in comments %}
+                    <div class="comment" id="comment-{{ comment.id }}">
+                        <p class="comment-meta">
+                            <span class="comment-author">
+                                by <strong>{{ comment.author.username }}</strong>
+                                <span class="comment-time">{{ comment.created_at|custom_timesince }} ago</span>&nbsp;
+                            </span>
+                            |
+                            <a href="{% url 'users:unvote_comment' comment.id %}?next={{ request.path }}" class="comment-link">unvote</a>
+                        </p>
+
+                        <div class="comment-content">
+                            <p class="comment-text">{{ comment.text }}</p>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p>No upvoted comments .</p>
+                {% endfor %}
+            </div>
+
+        </div>
+    </main>
+</body>
+</html>

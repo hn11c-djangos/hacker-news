@@ -82,3 +82,9 @@ class UpvotedSubmission(models.Model):
     class Meta:
         unique_together = ('user', 'submission')
 
+class UpvotedComment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('user', 'comment')
