@@ -9,9 +9,9 @@
     <link rel="stylesheet" href="{% static 'users/profile_styles.css' %}">
 </head>
 <body>
-    {% include "header.html" %}
-    <main>
-        <div id="comments">
+{% include "header.html" %}
+<main>
+    <div class="comments-container">
         {% for comment in comments %}
             <div class="comment" id="comment-{{ comment.id }}">
                 <p class="comment-meta">
@@ -26,32 +26,32 @@
                             <button type="submit" class="triangle-icon"></button>
                         </form>
                     {% endif %}
-                    <span class="comment-author">
+                <span class="comment-author">
                         by <a href="{% url 'users:profile' %}?id={{ comment.author.username }}" class="comment-link">{{ comment.author.username }}</a>
                         <span class="comment-time">{{ comment.created_at|timesince }} ago</span>
                         | <a href="{% url 'news:submission_detail' comment.submission.id %}#comment-{{ comment.parent.id }}" class="comment-link"> parent  </a>
                         | <a href="{% url 'news:submission_detail' comment.submission.id %}#comment-{{ comment.id }}" class="comment-link"> context </a>
-                        {% if comment.id in voted_comments %}
-                            | <a href="{% url 'users:unvote_comment' comment.id %}?next={{ request.path }}" class="comment-link">unvote</a>
-                        {% endif %}
-                        {% if comment.author == request.user %}
-                            | <a href="{% url 'news:edit_comment' comment.id %}" class="comment-link">edit</a>&nbsp;
-                            | <a href="{% url 'news:confirm_delete' comment.id %}" class="comment-link">delete</a>
-                        {% endif %}
-                        | on:<a href="{% url 'news:submission_detail' comment.submission.id %}" class="comment-link"> {{comment.submission.title}}</a>
+                    {% if comment.id in voted_comments %}
+                        | <a href="{% url 'users:unvote_comment' comment.id %}?next={{ request.path }}" class="comment-link">unvote</a>
+                    {% endif %}
+                    {% if comment.author == request.user %}
+                        | <a href="{% url 'news:edit_comment' comment.id %}" class="comment-link">edit</a>&nbsp;
+                        | <a href="{% url 'news:confirm_delete' comment.id %}" class="comment-link">delete</a>
+                    {% endif %}
+                    | on:<a href="{% url 'news:submission_detail' comment.submission.id %}" class="comment-link"> {{comment.submission.title}}</a>
                     </span>
-                    
-    
-                   
+
+
+
 
                 <div class="comment-content">
                     <p class="comment-text">{{ comment.text }}</p>
                 </div>
             </div>
-        {% empty %}
+            {% empty %}
             <p>No comments yet.</p>
         {% endfor %}
     </div>
-    </main>
+</main>
 </body>
 </html>
