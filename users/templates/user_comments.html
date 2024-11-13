@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ user.username }}'s Comments</title>
+    <link rel="stylesheet" href="{% static 'news/styles.css' %}">
+</head>
+<body>
+    <!-- Header Section -->
+    {% include "header.html" %}
+    <main>
+        <div class="submissions-container">
+            <h2>{{ user.username }}'s Comments</h2>
+            {% if comments %}
+                <ul>
+                    {% for comment in comments %}
+                        <p>
+                            {% if comment.author == request.user %}
+                                <span class="red-asterisk-comments">*</span>
+                                <span class="triangle-icon hidden "></span>
+                            {% else %}
+                                <span class="triangle-icon"></span>
+                            {% endif %}
+                            <strong>{{ comment.author.username }}</strong> - 
+                            {{ comment.created_at|timesince }} ago
+                            
+                            <!-- Edit and Delete links only visible to the comment author -->
+                            {% if comment.author == user %}
+                                | <a href="{% url 'news:edit_comment' comment.id %}" class="comment-link">Edit</a>
+                                | <a href="{% url 'news:confirm_delete' comment.id %}" class="comment-link" onclick="confirmDelete(event)">Delete</a>
+                            {% endif %}
+                            
+                            <!-- Parent link if comment has a parent -->
+                            {% if comment.parent %}
+                                | <a href="{% url 'news:comment_parent' comment.id %}" class="comment-link">Parent</a>
+                            {% else %}
+                                <!-- Redirect to submission if no parent -->
+                                | <a href="{% url 'news:submission_detail' comment.submission.id %}" class="comment-link">Parent</a>
+                            {% endif %}
+                            
+                            <!-- Title of the submission with the comment -->
+                            | <strong>Comment on:</strong> 
+                            <a href="{% url 'news:submission_detail' comment.submission.id %}">{{ comment.submission.title }}</a>
+                        </p>
+                        
+                        <!-- Comment Content -->
+                        <p>{{ comment.text }}</p>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>This user has not made any comments yet.</p>
+            {% endif %}
+        </div>
+    </main>
+</body>
+</html>

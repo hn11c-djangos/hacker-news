@@ -34,6 +34,15 @@
                     | <a href="{% url 'news:edit_comment' comment.id %}" class="comment-link">edit</a>
                     | <a href="{% url 'news:confirm_delete' comment.id %}" class="comment-link" onclick="confirmDelete(event)">delete</a>
                 {% endif %}
+                {% if comment.parent %}
+                    | <a href="{% url 'news:comment_parent' comment.parent.id %}" class="comment-link">Parent</a>
+                    {% else %}
+                    | <a href="{% url 'news:submission_detail' submission.id %}" class="comment-link">Parent</a>
+                    {% endif %}
+
+                <!-- Enlace al comentario sobre el que se hizo el reply -->
+                | <strong>Comment on:</strong> 
+                <a href="{% url 'news:submission_detail' submission.id %}">{{ submission.title }}</a>
             </p>
             <div class="comment-content">
                 <p class="comment-text">{{ comment.text }}</p>

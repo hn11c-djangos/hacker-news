@@ -165,3 +165,9 @@ def favorites(request):
         users_favorites = Favorite_submission.objects.filter(user=target_user).values_list('submission_id', flat=True)
         fav_submissions = Submission.objects.filter(id__in=users_favorites)
         return render(request, 'favorite_submissions.html', {'submissions': fav_submissions, 'target_user' : target_user, 'req_favorites' : req_favorites,'voted_submissions' : voted, 'isComments' : False})
+
+def user_comments(request, username):
+    print(f"Username recibido: {username}")
+    user = get_object_or_404(User, username=username)
+    comments = Comment.objects.filter(author=user)
+    return render(request, 'user_comments.html', {'comments': comments, 'user': user})

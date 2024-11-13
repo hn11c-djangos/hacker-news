@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parent Comment</title>
+    <link rel="stylesheet" href="{% static 'news/styles.css' %}">
+</head>
+<body>
+    <!-- Header Section -->
+    {% include "header.html" %}
+    <main>
+        <div class="submissions-container">
+            {% if parent_comment %}
+                <div class="comment" id="comment-{{ parent_comment.id }}">
+                    <p class="comment-meta">
+                        {% if parent_comment.author == request.user %}
+                            <span class="red-asterisk-comments">*</span>
+                            <span class="triangle-icon hidden"></span>
+                        {% else %}
+                            <span class="triangle-icon"></span>
+                        {% endif %}
+                        <strong>{{ parent_comment.author.username }}</strong> - 
+                        {{ parent_comment.created_at|timesince }} ago
+
+                        <!-- Edit and Delete links only visible to the comment author -->
+                        {% if parent_comment.author == user %}
+                            | <a href="{% url 'news:edit_comment' parent_comment.id %}" class="comment-link">Edit</a>
+                            | <a href="{% url 'news:confirm_delete' parent_comment.id %}" class="comment-link" onclick="confirmDelete(event)">Delete</a>
+                        {% endif %}
+
+                        <!-- Parent link if the comment has a parent -->
+                        {% if parent_comment.parent %}
+                            | <a href="{% url 'news:comment_parent' parent_comment.parent.id %}" class="comment-link">Parent</a>
+                        {% else %}
+                            | <a href="{% url 'news:submission_detail' parent_comment.submission.id %}" class="comment-link">Parent</a>
+                        {% endif %}
+                        
+                        <!-- Title of the submission with the comment -->
+                        | <strong>Comment on:</strong> 
+                        <a href="{% url 'news:submission_detail' parent_comment.submission.id %}">{{ parent_comment.submission.title }}</a>
+                    </p>
+
+                    <!-- Parent comment text -->
+                    <p>{{ parent_comment.text }}</p>
+
+                    <!-- Display replies of this parent comment -->
+                    <div class="replies">
+                        {% include 'reply_thread.html' with replies=parent_comment.replies.all %}
+                    </div>
+                </div>
+            {% else %}
+                <p>Comment not found.</p>
+            {% endif %}
+        </div>
+    </main>
+</body>
+</html>

@@ -8,6 +8,7 @@ from django.http import JsonResponse, Http404, HttpResponseRedirect
 from django.contrib import messages
 from .utils import calculate_account_age
 from .utils import calculate_score
+from django.contrib.auth.models import User
 
 
 def news(request):
@@ -115,25 +116,30 @@ def search(request):
 
 def submission_details(request, submission_id):
     submission = get_object_or_404(Submission, id=submission_id)
-    comments = Comment.objects.filter(submission=submission, parent__isnull=True)  # Solo comentarios principales
+    comments = submission.comments.all()
+    comments = Comment.objects.filter(submission=submission, parent=None)
+    submission.comment_count = submission.comments.count()  # Actualiza el contador de comentarios
 
+    # Procesar el formulario de comentarios
     if request.method == 'POST':
-        form = CommentForm(request.POST)
-        if form.is_valid():
+        if not request.user.is_authenticated:  # Verifica si el usuario no está autenticado
+            messages.error(request, "Debes estar logueado para comentar.")  # Mensaje de error
+            return redirect('news:submission_detail', submission_id=submission.id)
+
+        form = CommentForm(request.POST)  # Instancia del formulario con los datos POST
+        if form.is_valid():  # Verifica que el formulario sea válido
             comment = form.save(commit=False)
-            comment.author = request.user
-            comment.submission = submission
-            comment.save()
-            return redirect('news:submission_details', submission_id=submission.id)
+            comment.submission = submission  # Relaciona el comentario con la publicación
+            comment.author = request.user  # Establece el autor del comentario como el usuario logueado
+            comment.save()  # Guarda el comentario en la base de datos
+
+            # Redirige para evitar que el comentario se reenvíe al actualizar la página
+            return redirect('news:submission_detail', submission_id=submission.id)
+
     else:
-        form = CommentForm()
+        form = CommentForm()  # Si es un GET, el formulario estará vacío
 
-    return render(request, 'submission_details.html', {
-        'submission': submission,
-        'comments': comments,
-        'form': form,
-    })
-
+    return render(request, 'submission_details.html', {'submission': submission, 'comments': comments, 'form': form})
 
 @login_required
 def confirm_delete(request, comment_id):
@@ -159,7 +165,7 @@ def delete_comment(request, comment_id):
 
 def edit_comment(request, comment_id):
     comment = get_object_or_404(Comment, id=comment_id)
-
+    submission = comment.submission
     # Verificar si el usuario es el autor del comentario
     if comment.author != request.user:
         messages.error(request, "You do not have permission to edit this comment.")
@@ -173,7 +179,7 @@ def edit_comment(request, comment_id):
     else:
         form = CommentForm(instance=comment)  # Si es un GET, mostrar el formulario con los datos del comentario
 
-    return render(request, 'edit_comment.html', {'form': form, 'comment': comment})
+    return render(request, 'edit_comment.html', {'form': form, 'comment': comment, 'submission': submission})
 
 @login_required
 def reply_to_comment(request, comment_id):
@@ -222,3 +228,18 @@ def edit_submission(request, submission_id):
     else:
         form = EditSubmissionForm(instance=submission)
     return render(request, 'edit_submission.html', {'form': form, 'submission': submission})
+
+def comment_parent(request, comment_id):
+    # Obtén el comentario al cual se hace clic
+    comment = get_object_or_404(Comment, id=comment_id)
+    
+    # Si el comentario tiene un padre, obtén el comentario padre
+    parent_comment = comment.parent if comment.parent else comment
+    
+    # Obtén todas las respuestas al comentario padre (incluyendo el comentario sobre el que se hizo clic)
+    replies = Comment.objects.filter(parent=parent_comment).order_by('created_at')
+    
+    return render(request, 'parent_comment.html', {
+        'parent_comment': parent_comment,
+        'replies': replies
+    })

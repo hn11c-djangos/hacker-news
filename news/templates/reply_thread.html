@@ -4,30 +4,40 @@
             <!-- Icono de comentario (Asterisco o Triángulo) -->
             {% if reply.author == request.user %}
                 <span class="red-asterisk-comments">*</span>
-                <span class="triangle-icon hidden "></span>
+                <span class="triangle-icon hidden"></span>
             {% else %}
                 <span class="triangle-icon"></span>
             {% endif %}
             
-            <span class="comment-author">
-                by <strong>{{ reply.author.username }}</strong>
-                <span class="comment-time">{{ reply.created_at|timesince }} ago</span>&nbsp;
-            </span>
-            
-            <!-- Botones Editar y Eliminar -->
+            <!-- Mostrar autor y tiempo de creación -->
+            <strong>{{ reply.author.username }}</strong> - 
+            {{ reply.created_at|timesince }} ago
+
+            <!-- Botones Editar y Eliminar solo si el autor es el usuario o el perfil actual -->
             {% if reply.author == request.user %}
-                | &nbsp;<a href="{% url 'news:edit_comment' reply.id %}" class="edit-link">Edit</a>&nbsp;
-                | &nbsp;<a href="{% url 'news:confirm_delete' reply.id %}" class="delete-link">Delete</a>
+                | <a href="{% url 'news:edit_comment' reply.id %}" class="comment-link">Edit</a>
+                | <a href="{% url 'news:confirm_delete' reply.id %}" class="comment-link" onclick="confirmDelete(event)">Delete</a>
             {% endif %}
+            
+            <!-- Enlace a la respuesta principal si existe -->
+            {% if reply.parent %}
+                | <a href="{% url 'news:comment_parent' reply.parent.id %}" class="comment-link">Parent</a>
+            {% else %}
+                | <a href="{% url 'news:submission_detail' reply.submission.id %}" class="comment-link">Parent</a>
+            {% endif %}
+
+            <!-- Enlace al comentario sobre el que se hizo el reply -->
+            | <strong>Comment on:</strong> 
+            <a href="{% url 'news:submission_detail' reply.submission.id %}">{{ reply.submission.title }}</a>
         </p>
         
         <div class="comment-content">
             <p class="comment-text">{{ reply.text }}</p>
 
             <!-- Enlace para responder a la respuesta -->
-            <a href="{% url 'news:reply_to_comment' reply.id %}" class="reply-link">reply</a>
+            <a href="{% url 'news:reply_to_comment' reply.id %}" class="reply-link">Reply</a>
             
-            <!-- Mostrar respuestas de esta respuesta, si existen -->
+            <!-- Mostrar respuestas de esta respuesta si existen -->
             <div class="replies" style="display: block; margin-left: 20px;">
                 {% include 'reply_thread.html' with replies=reply.replies.all %}
             </div>
