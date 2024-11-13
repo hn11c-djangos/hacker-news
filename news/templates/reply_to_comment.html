@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Comment</title>
+    <link rel="stylesheet" href="{% static 'news/styles.css' %}">
+</head>
+<body>
+    {% include "header.html" %}
+    <main>
+        <p class="original-comment-meta">
+            {% if original_comment.author == request.user %}
+                    <span class="red-asterisk-comments">*</span>
+                    <span class="triangle-icon hidden "></span>
+                {% else %}
+                    <span class="triangle-icon"></span>
+                {% endif %}
+            <strong>{{ original_comment.author.username }}</strong> 
+            <span class="original-comment-time">{{ original_comment.created_at|timesince }} ago</span>
+
+            {% if original_comment.author == request.user %}
+                | <a href="{% url 'news:edit_comment' original_comment.id %}" class="comment-link">edit</a>
+                | <a href="{% url 'news:confirm_delete' original_comment.id %}" class="comment-link" onclick="confirmDelete(event)">delete</a>
+            {% endif %}
+            <a href="javascript:void(0);" class="toggle-comment">[-]</a>
+            <p>{{ original_comment.text }}</p>
+        </p>
+        <section>
+            <div class="reply-form">
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form.text }}
+                    <button type="submit">reply</button>
+                </form>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

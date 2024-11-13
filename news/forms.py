@@ -20,4 +20,7 @@ class SubmissionForm(forms.ModelForm):
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
-        fields = ['text']
+        fields = ['text']  # Usamos el campo 'text' del modelo
+        widgets = {
+            'text': forms.Textarea(attrs={'placeholder': 'Your Comment'})  # Añades un widget para el campo 'text'
+        }

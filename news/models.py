@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 class Submission(models.Model):
@@ -13,9 +14,22 @@ class Submission(models.Model):
     
 class Comment(models.Model):
     submission = models.ForeignKey(Submission, related_name='comments', on_delete=models.CASCADE)
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name="replies")
     text = models.TextField()
-    created = models.DateTimeField(auto_now_add=True)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    level = models.IntegerField(default=0)
     def __str__(self):
         return "self.text"
     class Meta:
-        ordering = ['created']
+        ordering = ['created_at']
+
+
+class UpvotedSubmission(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    submission = models.ForeignKey(Submission, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('user', 'submission')
+
+

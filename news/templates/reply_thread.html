@@ -1,0 +1,37 @@
+{% for reply in replies %}
+    <div class="comment" id="comment-{{ reply.id }}">
+        <p class="comment-meta">
+            <!-- Icono de comentario (Asterisco o Triángulo) -->
+            {% if reply.author == request.user %}
+                <span class="comment-icon">&#9733;</span> <!-- Asterisco -->
+            {% else %}
+                <span class="comment-icon">&#9650;</span> <!-- Triángulo -->
+            {% endif %}
+            
+            <span class="comment-author">
+                by <strong>{{ reply.author.username }}</strong>
+                <span class="comment-time">{{ reply.created_at|timesince }} ago</span>
+            </span>
+            
+            <!-- Botones Editar y Eliminar -->
+            {% if reply.author == request.user %}
+                | <a href="{% url 'news:edit_comment' reply.id %}" class="edit-link">Edit</a>
+                | <a href="{% url 'news:confirm_delete' reply.id %}" class="delete-link">Delete</a>
+            {% endif %}
+        </p>
+        
+        <div class="comment-content">
+            <p class="comment-text">{{ reply.text }}</p>
+
+            <!-- Enlace para responder a la respuesta -->
+            <a href="{% url 'news:reply_to_comment' reply.id %}" class="reply-link">reply</a>
+            
+            <!-- Mostrar respuestas de esta respuesta, si existen -->
+            <div class="replies" style="display: block; margin-left: 20px;">
+                {% include 'reply_thread.html' with replies=reply.replies.all %}
+            </div>
+        </div>
+    </div>
+{% endfor %}
+
+

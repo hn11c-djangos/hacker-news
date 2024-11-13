@@ -38,6 +38,7 @@
         </nav>
     </header>
 
+<<<<<<< Updated upstream
     <div class="submission-detail">
         <h1>{{ submission.title }} (<a href="{{ submission.url }}" target="_blank">{{ submission.url }}</a>)</h1>
         <p>{{ submission.created }}</p>
@@ -54,11 +55,105 @@
                     <strong>{{ comment.author }}</strong> <span class="comment-date">{{ comment.created }}</span>
                     <p>{{ comment.text }}</p>
                     <hr>
+=======
+        <section class="news-list">
+            <ul>
+                <li class="news-item">
+                    <div class="icon-container">
+                        {% if submission.author == request.user %}
+                            <span class="red-asterisk">*</span>
+                            <span class="triangle-icon hidden"></span> 
+                        {% elif submission.id in voted_submissions %}
+                            <span class="triangle-icon hidden "></span>
+                        {% else %}
+                            {% if user.is_authenticated %}
+                                <form action="{% url 'users:upvote' submission.id %}?next={{ request.path }}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="triangle-icon"></button>
+                                </form>
+                            {% else %}
+                                <button class="triangle-icon" onclick="showLoginPrompt()"></button>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                    <span class="news-title">
+                        <a href="{{ submission.url }}"> {{ submission.title }}</a>
+                        <a href="{% url 'news:submissions_by_domain' %}?domain={{ submission.domain }}" class="domain-link">({{ submission.domain }})</a>
+                    </span>
+                    <span class="news-details">
+                        X points
+                        by <a href="{% url 'users:profile' %}?id={{ submission.author }}" class="submissions-link">{{ submission.author }}</a>
+                        | <a href="{% url 'news:hide_submission' submission.id %}" class="submissions-link">hide</a>
+                        | <a href="{% url 'news:submission_detail' submission.id %}" class="submissions-link">
+                            {% if submission.comment_count == 1 %}
+                                1 comment
+                            {% else %}
+                                {{ submission.comment_count }} comments
+                            {% endif %}
+                        </a>
+                        {% if submission.author == request.user %}
+                            | <a href="{% url 'news:delete_submission' submission.id %}" class="submissions-link" onclick="confirmDelete()">delete</a>
+                        {% endif %}
+                    </span>
+                </li>
+            </ul>
+        </section>
+    </main>
+
+    <!-- Add Comment Form -->
+    <div class="add-comment">
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.text }}
+            <button type="submit">Add comment</button>
+        </form>
+    </div>
+
+    <!-- Comments Section -->
+    <div id="comments">
+        {% for comment in comments %}
+            <div class="comment" id="comment-{{ comment.id }}">
+                <p class="comment-meta">
+                    <!-- Icono de comentario (Asterisco o Triángulo) -->
+                    {% if comment.author == request.user %}
+                        <span class="comment-icon">&#9733;</span> <!-- Asterisco -->
+                    {% else %}
+                        <span class="comment-icon">&#9650;</span> <!-- Triángulo -->
+                    {% endif %}
+                    
+                    <span class="comment-author">
+                        by <strong>{{ comment.author.username }}</strong>
+                        <span class="comment-time">{{ comment.created_at|timesince }} ago</span>
+                    </span>
+                    
+                    <!-- Botones Editar y Eliminar -->
+                    {% if comment.author == request.user %}
+                        | <a href="{% url 'news:edit_comment' comment.id %}" class="edit-link">Edit</a>
+                        | <a href="{% url 'news:confirm_delete' comment.id %}" class="delete-link">Delete</a>
+                    {% endif %}
+                </p>
+                
+                <div class="comment-content">
+                    <p class="comment-text">{{ comment.text }}</p>
+
+                    <!-- Enlace para responder al comentario -->
+                    <a href="{% url 'news:reply_to_comment' comment.id %}" class="reply-link">reply</a>
+                    
+                    <!-- Mostrar respuestas (replies) -->
+                    <div class="replies" style="margin-left: 20px;">
+                        {% include 'reply_thread.html' with replies=comment.replies.all %}
+                    </div>
+>>>>>>> Stashed changes
                 </div>
             {% empty %}
                 <p>No comments yet.</p>
             {% endfor %}
         </div>
     </div>
+
 </body>
+<<<<<<< Updated upstream
 </html>
+=======
+</html>
+>>>>>>> Stashed changes

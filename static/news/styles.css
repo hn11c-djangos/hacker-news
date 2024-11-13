@@ -180,6 +180,277 @@ p {
     margin: 0 20px; /* Add left and right margin */
 }
 
+
+.username-link {
+    color: #000; /* Black text color by default */
+    text-decoration: none;
+}
+/*
+.username-link:hover {
+    text-decoration: underline;
+}
+*/
+.user-actions {
+    display: flex;
+    align-items: center;
+}
+
+.username-link {
+    color: #000; /* Black text color by default */
+    text-decoration: none;
+    margin-right: 10px; /* Space between username and separator */
+    padding: 5px 10px; /* Match the padding of other elements */
+}
+
+.username-link.active {
+    color: white !important;
+    text-decoration: none !important;
+}
+
+.separator {
+    margin: 0 10px; /* Space around the separator */
+    color: #000  !important; /* Black color for the separator */
+}
+
+a.submissions-link {
+    text-decoration: none; /* Remove underline */
+    color: inherit; /* Use the same color as the surrounding text */
+}
+a.submissions-link:hover {
+    text-decoration: underline; /* Optional: Add underline on hover */
+}
+
+/* Triángulo pequeño a la izquierda del título */
+.triangle-icon {
+    all: unset;
+    cursor: pointer;
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 10px solid #777;
+    margin-right: 10px;
+    margin-bottom: 6px;
+    align-self: center;
+}
+
+.triangle-icon.hidden {
+    visibility: hidden; /* Mantiene el espacio pero hace invisible el triángulo */
+}
+
+/* Ajustar el contenedor de .news-item para alinear los elementos en fila
+.news-item {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+}
+*/
+
+.button-container {
+    display: flex;  /* Usar flexbox para organizar los botones en fila */
+    gap: 10px;  /* Espacio entre los botones */
+}
+
+button[type="submit"] {
+    background-color: #ff6600;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 3px;
+    margin: 0; 
+    font-size: 14px;
+    display: inline-block;
+}
+
+/* Contenedor de comentarios */
+#comments {
+    margin-top: 5px;
+    margin-left: 70px;
+}
+
+a.comment-link {
+    text-decoration: none; /* Remove underline */
+    color: inherit; /* Use the same color as the surrounding text */
+    margin-left: 4px;
+    margin-right: 4px;
+}
+
+/* Estilos para cada comentario */
+.comment {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    margin-left: 20px;
+    font-size: 14px;
+    color: #333;
+}
+
+/* Meta información del comentario */
+.comment-meta {
+    font-size: 12px;
+    color: #888;
+    display: flex;
+    align-items: center;
+}
+
+/* Hora del comentario */
+.comment-time {
+    font-size: 12px;
+    color: #888;
+}
+
+/* Link para ocultar comentario */
+.toggle-comment {
+    font-size: 12px;
+    color: #888;
+    text-decoration: none;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+/* Texto del comentario */
+.comment-content {
+    margin-top: 2px;
+    margin-bottom: 2px;
+    line-height: 1.5;
+    color: #333;
+}
+
+/* Botón de reply */
+.reply-link {
+    font-size: 12px;
+    color: #0066c0;
+    text-decoration: none;
+    display: block;
+    margin-top: 2spx;
+}
+
+.reply-link:hover {
+    text-decoration: underline;
+}
+
+
+button[type="submit"]:hover {
+    background-color: #e65c00; /* Color más oscuro al pasar el mouse */
+}
+
+.submission-detail{
+    font-family:Verdana, Geneva, sans-serif; 
+    font-size:10pt; 
+    color:#828282;
+}
+
+.add-comment {
+    display: flex;
+    flex-direction: column; /* Coloca los elementos en una columna */
+    width: 500px; /* Mismo ancho que la caja de texto */
+    margin-left: 100px; /* Espacio izquierdo */
+}
+
+/* Caja de texto */
+.add-comment textarea {
+    width: 100%; /* Asegura que la caja de texto ocupe todo el ancho del contenedor */
+    min-height: 40px; /* Establece una altura mínima */
+    padding: 8px;
+    font-size: 14px;
+    margin-bottom: 10px; /* Espacio entre el textarea y el botón */
+    border-radius: 3px;
+    border: 1px solid #ddd; /* Asegura un borde */
+}
+
+/* Botón */
+.add-comment button {
+    background-color: #f0f0f0; /* Fondo gris */
+    color: #000; /* Letra negra */
+    border: 1px solid #ccc; /* Borde gris */
+    padding: 2px 7px; /* Hacerlo más estrecho */
+    cursor: pointer; /* Cambia el cursor a pointer al pasar sobre el botón */
+    border-radius: 3px; /* Bordes redondeados */
+    margin-top: 10px; /* Espacio superior para separarlo del textarea */
+    font-size: 14px; /* Tamaño de la fuente */
+}
+
+/* Hover para el botón */
+.add-comment button:hover {
+    background-color: #e0e0e0;
+}
+
+/*Save Edited Comments*/
+.save-comment {
+    display: flex;
+    flex-direction: column; /* Coloca los elementos en una columna */
+    width: 500px; /* Mismo ancho que la caja de texto */
+    margin-left: 0px; /* Espacio izquierdo */
+}
+
+/* Caja de texto */
+.save-comment textarea {
+    width: 200%; /* Asegura que la caja de texto ocupe todo el ancho del contenedor */
+    min-height: 10px; /* Establece una altura mínima */
+    height: 120px;
+    padding-top: 5px; /* Asegura que el texto se alinee más cerca de la parte superior */
+    padding-left: 8px;
+    padding-right: 8px;
+    font-size: 14px;
+    margin-bottom: 10px; /* Espacio entre el textarea y el botón */
+    border-radius: 3px;
+    border: 1px solid #ddd; /* Asegura un borde */
+}
+
+/* Botón */
+.save-comment button {
+    background-color: #f0f0f0; /* Fondo gris */
+    color: #000; /* Letra negra */
+    border: 1px solid #ccc; /* Borde gris */
+    padding: 2px 7px; /* Hacerlo más estrecho */
+    cursor: pointer; /* Cambia el cursor a pointer al pasar sobre el botón */
+    border-radius: 3px; /* Bordes redondeados */
+    margin-top: 10px; /* Espacio superior para separarlo del textarea */
+    font-size: 14px; /* Tamaño de la fuente */
+}
+
+/* Hover para el botón */
+.save-comment button:hover {
+    background-color: #e0e0e0;
+}
+
+.icon-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-right: 3px;
+}
+
+.red-asterisk {
+    color: #ff6600;
+    font-weight: bold;
+    font-size: 22px; /* Adjust the font size as needed */
+    position: absolute;
+    top: -5px;
+    left: 3px;
+    z-index: 1; /* Ensure the asterisk is on top */
+}
+
+.red-asterisk-comments {
+    color: #ff6600 !important;
+    font-weight: bold;
+    font-size: 14px; /* Ajusta el tamaño según sea necesario */
+    margin-left: 2px; /* Ajusta el espacio entre el texto y el asterisco */
+    display: inline; /* Asegura que esté en línea con el texto */
+}
+
+.news-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    justify-content: space-between; /* Ensure the details are aligned to the right */
+}
+
+.news-title {
+    flex-grow: 1; /* Allow the title to take up available space */
+
 /* Submission Details Styles */
 .content-wrapper h1 {
     font-size: 24px; /* Size for the main submission title */
@@ -226,4 +497,5 @@ button[type="submit"] {
 
 button[type="submit"]:hover {
     background-color: #e65c00; /* Darker orange on hover */
+}
 }
