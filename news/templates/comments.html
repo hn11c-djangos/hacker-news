@@ -49,7 +49,7 @@
                                 |&nbsp; <a href="{% url 'news:confirm_delete' comment.id %}" class="delete-link">Delete</a>
                             {% endif %}
                             {% if comment.parent %}
-                            | <a href="{% url 'news:comment_parent' comment.parent.id %}" class="comment-link">Parent</a>
+                            | <a href="{% url 'news:reply_to_comment' comment.parent.id %}" class="comment-link">Parent</a>
                             {% else %}
                             | <a href="{% url 'news:submission_detail' comment.submission.id %}" class="comment-link">Parent</a>
                             {% endif %}
