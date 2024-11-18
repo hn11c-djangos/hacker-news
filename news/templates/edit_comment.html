@@ -11,26 +11,24 @@
 <body>
     {% include "header.html" %}
     <main>
-        <div class="comment-meta">
+        <p class="comment-meta">
             {% if comment.author == request.user %}
                 <span class="red-asterisk-comments">*</span>
                 <span class="triangle-icon hidden"></span>
             {% else %}
                 <span class="triangle-icon"></span>
             {% endif %}
-            <strong>{{ comment.author.username }}</strong>
-            <a href="{% url 'news:comment_details' comment.id %}?reply=false" class="comment-link">
-                {{ comment.created_at|custom_timesince }} ago
-            </span>
+            <strong>{{ comment.author.username }}</strong>&nbsp;
+            <span class="comment-time">{{ comment.created_at|custom_timesince }} ago</span>&nbsp;
 
             {% if comment.author == request.user %}
                 | <a href="{% url 'news:edit_comment' comment.id %}" class="comment-link">edit</a>
-                | <a href="{% url 'news:confirm_delete' comment.id %}" class="comment-link">delete</a>
+                | <a href="{% url 'news:confirm_delete' comment.id %}" class="comment-link" onclick="confirmDelete(event)">delete</a>
             {% endif %}
-        </div>
+        </p>
 
         <!-- Texto actual del comentario -->
-        <p class="comment-text">{{ comment.text }}</p>
+        <p class="current-comment-text">{{ comment.text }}</p>
          
         <section>
             <div class="save-comment"> 

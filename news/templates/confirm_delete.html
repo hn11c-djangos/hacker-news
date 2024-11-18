@@ -32,7 +32,7 @@
 
                 {% if comment.author == request.user %}
                     | <a href="{% url 'news:edit_comment' comment.id %}" class="comment-link">edit</a>
-                    | <a href="{% url 'news:confirm_delete' comment.id %}" class="comment-link">delete</a>
+                    | <a href="{% url 'news:confirm_delete' comment.id %}" class="comment-link" onclick="confirmDelete(event)">delete</a>
                 {% endif %}
             </p>
             <div class="comment-content">

@@ -326,8 +326,8 @@ button[type="submit"] {
 a.comment-link {
     text-decoration: none; /* Remove underline */
     color: inherit; /* Use the same color as the surrounding text */
-    margin-left: 2px;
-    margin-right: 2px;
+    margin-left: 4px;
+    margin-right: 4px;
 }
 
 /* Estilos para cada comentario */
@@ -344,17 +344,11 @@ a.comment-link {
     color: #888;
     display: flex;
     align-items: center;
-    margin-top: 20px;
-    margin-bottom: 10px;
 }
 /* Hora del comentario */
 .comment-time {
     font-size: 12px;
     color: #888;
-}
-.comment-text {
-    margin-bottom: 3px;
-    margin-top: 2px;
 }
 /* Link para ocultar comentario */
 .toggle-comment {
@@ -367,6 +361,7 @@ a.comment-link {
 
 /* Texto del comentario */
 .comment-content {
+    margin-top: 2px;
     margin-bottom: 2px;
     line-height: 1.5;
     color: #333;

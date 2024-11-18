@@ -14,6 +14,8 @@
     {% include "header.html" %}
 
     <main>
+        <!-- Bloque para mostrar mensajes de éxito o error -->
+    
         <section class="news-list">
             <ul>
                     <li class="news-item">
@@ -24,10 +26,14 @@
                             {% elif submissionVoted %}
                                 <span class="triangle-icon hidden "></span>
                             {% else %}
-                                <form action="{% url 'users:upvote_submission' submission.id %}?next={{ request.path }}" method="post">
-                                    {% csrf_token %}
-                                    <button type="submit" class="triangle-icon"></button>
-                                </form>
+                                {% if user.is_authenticated %}
+                                    <form action="{% url 'users:upvote_submission' submission.id %}?next={{ request.path }}" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" class="triangle-icon"></button>
+                                    </form>
+                                {% else %}
+                                    <button class="triangle-icon unlogged" onclick="showLoginPrompt()"></button>
+                                {% endif %}
                             {% endif %}
                         </div>
                         <span class="news-title">
@@ -47,12 +53,15 @@
                                 |
                             {% endif %}
                             <!-- solo se muestra si el usuario autenticado es el autor de la submission -->
-                            {% if submission.id in hidden_submissions %}
-                                | <a href="{% url 'users:unhide_submission' submission.id %}?next={{ request.path }}" class="submissions-link">unhide</a>
+                            {% if user.is_authenticated %}
+                                {% if submission.id in hidden_submissions %}
+                                    | <a href="{% url 'users:unhide_submission' submission.id %}?next={{ request.path }}" class="submissions-link">unhide</a>
+                                {% else %}
+                                    | <a href="{% url 'news:hide_submission' submission.id %}?next={{ request.path }}" class="submissions-link">hide</a>
+                                {% endif %}
                             {% else %}
-                                | <a href="{% url 'news:hide_submission' submission.id %}?next={{ request.path }}" class="submissions-link">hide</a>
+                                <a onclick="showLoginPrompt()" class="submissions-link">hide</a>
                             {% endif %}
-                            
                             | <a href="{% url 'users:add_favorite_submission' submission.id %}" class="submissions-link">favorite</a>
                             |
                             <a href="{% url 'news:submission_detail' submission.id %}" class="submissions-link">
@@ -60,7 +69,7 @@
                             </a>
                             {% if submission.author == request.user %}
                                 | <a href="{% url 'news:edit_submission' submission.id %}" class="submissions-link">edit</a>
-                                | <a href="{% url 'news:delete_submission' submission.id %}" class="submissions-link">delete</a>
+                                | <a href="{% url 'news:delete_submission' submission.id %}" class="submissions-link" onclick="confirmDelete()">delete</a>
                             {% endif %}
                         </span>
                     </li>
@@ -84,7 +93,7 @@
     <div id="comments">
         {% for comment in comments %}
             <div class="comment" id="comment-{{ comment.id }}">
-                <div class="comment-meta">
+                <p class="comment-meta">
                     {% if comment.author == request.user %}
                         <span class="red-asterisk-comments">*</span>
                         <span class="triangle-icon hidden "></span>
@@ -102,20 +111,20 @@
                             <a href="{% url 'users:profile' %}?id={{ comment.author.username }}" class="comment-link">{{ comment.author.username }} </a>
                         </strong>
                         <span class="comment-time">
-                            <a href="{% url 'news:comment_details' comment.id %}?reply=false" class="comment-link">
+                            <a href="{% url 'news:reply_to_comment' comment.id %}?reply=false" class="comment-link">
                                 {{ comment.created_at|custom_timesince }} ago
                             </a>
-                        </span>
+                        </span>&nbsp;
                     </span>
                     {% if comment.id in voted_comments %}
                         | <a href="{% url 'users:unvote_comment' comment.id %}?next={{ request.path }}" class="comment-link">unvote</a>
                     {% endif %}
     
                     {% if comment.author == request.user %}
-                        |<a href="{% url 'news:edit_comment' comment.id %}" class="comment-link">edit</a>
-                        |<a href="{% url 'news:confirm_delete' comment.id %}" class="comment-link">delete</a>
+                        |&nbsp; <a href="{% url 'news:edit_comment' comment.id %}" class="comment-link">edit</a>&nbsp;
+                        |&nbsp; <a href="{% url 'news:confirm_delete' comment.id %}" class="comment-link">delete</a>
                     {% endif %}
-                </div>
+                </p>
 
                 <div class="comment-content">
                     <p class="comment-text">{{ comment.text }}</p>

@@ -2,7 +2,7 @@ from urllib.parse import urlparse
 from django.utils.timezone import now
 from datetime import timedelta, datetime
 from django.utils import timezone
-import math
+
 
 def get_domain(url):
     parsed_url = urlparse(url)
@@ -26,11 +26,6 @@ def calculate_account_age(date_joined):
         return f"{delta.days // 365} years ago"
 
 
-def calculate_score(submission, k=1):
-    # Calcular el tiempo transcurrido en minutos
+def calculate_score(submission):
     age_in_minutes = (timezone.now() - submission.created).total_seconds() / 60
-
-    # Fórmula para ajustar el puntaje: más reciente = más relevante, penaliza suavemente el tiempo
-    adjusted_score = submission.point / (1 + (age_in_minutes / k))
-
-    return adjusted_score
+    return submission.point - age_in_minutes

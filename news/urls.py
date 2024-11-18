@@ -17,7 +17,7 @@ urlpatterns = [
     path('comment/edit/<int:comment_id>/', views.edit_comment, name='edit_comment'),
 
     path('comments/', views.comments, name='comments'),
-    path('comment/<int:comment_id>/', views.comment_details, name='comment_details'),
+
 
     path('submission/<int:submission_id>/edit/', views.edit_submission, name='edit_submission'),
     path('reply/<int:comment_id>/', views.reply_to_comment, name='reply_to_comment'),

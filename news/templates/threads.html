@@ -1,5 +1,4 @@
 {% load static %}
-{% load custom_filters %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,11 +27,7 @@
                     {% endif %}
             <span class="comment-author">
                 <a href="{% url 'users:profile' %}?id={{ comment.author.username }}" class="comment-link">{{ comment.author.username }}</a>
-                <span class="comment-time">
-                    <a href="{% url 'news:comment_details' comment.id %}?reply=false" class="comment-link">
-                        {{ comment.created_at|custom_timesince }} ago
-                    </a>
-                </span>
+                <span class="comment-time">{{ comment.created_at|timesince }} ago</span>
                 |
                 <a href="{% url 'news:submission_detail' comment.submission.id %}#comment-{{ comment.parent.id }}"class="comment-link">parent</a>
                 |

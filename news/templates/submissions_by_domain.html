@@ -28,10 +28,14 @@
                                 {% elif submission.id in voted_submissions %}
                                     <span class="triangle-icon hidden"></span>
                                 {% else %}
-                                    <form action="{% url 'users:upvote_submission' submission.id %}?next={{ request.get_full_path }}" method="post">
-                                        {% csrf_token %}
-                                        <button type="submit" class="triangle-icon"></button>
-                                    </form>
+                                    {% if user.is_authenticated %}
+                                        <form action="{% url 'users:upvote_submission' submission.id %}?next={{ request.get_full_path }}" method="post">
+                                            {% csrf_token %}
+                                            <button type="submit" class="triangle-icon"></button>
+                                        </form>
+                                    {% else %}
+                                        <button class="triangle-icon unlogged" onclick="showLoginPrompt()"></button>
+                                    {% endif %}
                                 {% endif %}
                             </div>
                             <span class="news-title">
@@ -57,7 +61,7 @@
                             </a>
                             {% if submission.author == request.user %}
                                 | <a href="{% url 'news:edit_submission' submission.id %}" class="submissions-link">edit</a>
-                                | <a href="{% url 'news:delete_submission' submission.id %}" class="submissions-link">delete</a>
+                                | <a href="{% url 'news:delete_submission' submission.id %}" class="submissions-link" onclick="confirmDelete()">delete</a>
                             {% endif %}
                         </span>
                         </li>

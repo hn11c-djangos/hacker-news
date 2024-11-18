@@ -39,11 +39,14 @@
                                     {% elif submission.id in voted_submissions %}
                                         <span class="triangle-icon hidden "></span>
                                     {% else %}
-                                        <form action="{% url 'users:upvote_submission' submission.id %}?next={{ request.get_full_path }}" method="post">
-                                            {% csrf_token %}
-                                            <button type="submit" class="triangle-icon"></button>
-                                        </form>
-
+                                        {% if user.is_authenticated %}
+                                            <form action="{% url 'users:upvote_submission' submission.id %}?next={{ request.get_full_path }}" method="post">
+                                                {% csrf_token %}
+                                                <button type="submit" class="triangle-icon"></button>
+                                            </form>
+                                        {% else %}
+                                            <button class="triangle-icon" onclick="showLoginPrompt()"></button>
+                                        {% endif %}
                                     {% endif %}
                                 </div>
                                 <span class="news-title">

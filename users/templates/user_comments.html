@@ -20,7 +20,7 @@
             <div id="comments">
                 {% for comment in comments %}
                     <div class="comment" id="comment-{{ comment.id }}">
-                        <div class="comment-meta">
+                        <p class="comment-meta">
                             {% if user != usr %}
                                 {% if comment.id in voted_comments %}
                                     <span class="triangle-icon hidden"></span>
@@ -36,7 +36,7 @@
                                     <a href="{% url 'users:profile' %}?id={{ comment.author.username }}" class="comment-link">{{ comment.author.username }}</a>
                                 </strong>
                                 <span class="comment-time">
-                                    <a href="{% url 'news:comment_details' comment.id %}?reply=false" class="comment-link">
+                                    <a href="{% url 'news:reply_to_comment' comment.id %}?reply=false" class="comment-link">
                                         {{ comment.created_at|custom_timesince }} ago
                                     </a>
                                 </span>
@@ -53,7 +53,7 @@
                             {% endif %}
                             |
                             on: <a href="{% url 'news:submission_detail' comment.submission.id %}" class="comment-link">{{ comment.submission.title }}</a>
-                        </div>
+                        </p>
 
                         <div class="comment-content">
                             <p class="comment-text">{{ comment.text }}</p>

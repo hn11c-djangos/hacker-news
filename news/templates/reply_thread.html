@@ -1,7 +1,7 @@
 {% load custom_filters %}
 {% for reply in replies %}
     <div class="comment" id="comment-{{ reply.id }}">
-        <div class="comment-meta">
+        <p class="comment-meta">
             <!-- Icono de comentario (Asterisco o Triángulo) -->
             {% if reply.author == request.user %}
                 <span class="red-asterisk-comments">*</span>
@@ -20,7 +20,7 @@
                 <a href="{% url 'users:profile' %}?id={{ reply.author.username }}" class="comment-link">{{ reply.author.username }} </a>
             </strong>
             <span class="comment-time">
-                <a href="{% url 'news:comment_details' reply.id %}?reply=false" class="comment-link">
+                <a href="{% url 'news:reply_to_comment' reply.id %}?reply=false" class="comment-link">
                     {{ reply.created_at|custom_timesince }} ago
                 </a>
             </span>&nbsp;
@@ -33,7 +33,7 @@
             | &nbsp;<a href="{% url 'news:edit_comment' reply.id %}" class="comment-link">edit</a>&nbsp;
             | &nbsp;<a href="{% url 'news:confirm_delete' reply.id %}" class="comment-link">delete</a>
         {% endif %}
-    </div>
+        </p>
         
         <div class="comment-content">
             <p class="comment-text">{{ reply.text }}</p>
