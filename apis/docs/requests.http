@@ -22,7 +22,7 @@ Authorization: Token 17e56252c5a6a3c2b5c58d398b69c9360bef4122
 
 ### Get threads
 GET http://localhost:8000/api/threads
-Authorization: Token 14744982b8c13b25923fa52ccaea639dbef3286b
+Authorization: Token 17e56252c5a6a3c2b5c58d398b69c9360bef4122
 
 ### Get asks
 GET http://localhost:8000/api/asks
@@ -30,3 +30,8 @@ GET http://localhost:8000/api/asks
 ### Get submissions by domain
 GET http://localhost:8000/api/submissions?from=example.com
 
+### Get user's profile
+GET http://localhost:8000/api/users/3/profile
+
+### Get user's submissions
+GET http://localhost:8000/api/users/4/submissions

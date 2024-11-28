@@ -2,6 +2,8 @@ from operator import is_not
 
 from rest_framework import serializers
 from news.models import Submission, Comment
+from users.models import Profile
+
 
 class ReplySerializer(serializers.ModelSerializer):
     class Meta:
@@ -45,3 +47,8 @@ class SubmissionCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Submission
         fields = ['title', 'url', 'text']
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = '__all__'
