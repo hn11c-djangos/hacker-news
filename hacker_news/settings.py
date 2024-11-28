@@ -15,7 +15,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 import secrets
 import dj_database_url
-
+from drf_yasg import openapi
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -106,7 +106,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
+        'hacker_news.permissions.TokenRequiredForUnsafeMethods',
     ],
 }
 
@@ -303,7 +303,7 @@ WHITENOISE_KEEP_ONLY_HASHED_FILES = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
+# Amazon S3 storage settings
 INSTALLED_APPS += ['storages']
 AWS_S3_OBJECT_PARAMETERS = {
     'CacheControl': 'max-age=86400',
@@ -314,3 +314,35 @@ DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/'
 MEDIA_ROOT = 'media/'
+
+# OpenAPI documentation
+openapi_info = openapi.Info(
+    title="Hacker News API Documentation",
+    default_version='v1',
+    description="Documentation for the Hacker News API",
+    terms_of_service="https://www.google.com/policies/terms/",
+    contact=openapi.Contact(email="fywang021205@gmail.com"),
+    license=openapi.License(name="MIT License"),
+)
+
+SWAGGER_SETTINGS = {
+    'DEFAULT_INFO': 'hacker_news.settings.openapi_info',
+    'SERVERS' : [
+        {
+            "url": "http://localhost:8000",
+            "description": "Local server"
+        },
+        {
+            "url": "https://projecte-asw-cdd22f32d84c.herokuapp.com",
+            "description": "Heroku server"
+        }
+    ],
+    'SECURITY_DEFINITIONS': {
+        'Token': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    },
+}
+

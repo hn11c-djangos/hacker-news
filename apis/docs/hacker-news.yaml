@@ -1,0 +1,153 @@
+swagger: '2.0'
+info:
+  title: Hacker News API Documentation
+  description: Documentation for the Hacker News API
+  termsOfService: https://www.google.com/policies/terms/
+  contact:
+    email: fywang021205@gmail.com
+  license:
+    name: MIT License
+  version: v1
+basePath: /api
+consumes:
+- application/json
+produces:
+- application/json
+securityDefinitions:
+  Basic:
+    type: basic
+security:
+- Basic: []
+paths:
+  /asks:
+    get:
+      operationId: asks_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - asks
+    parameters: []
+  /comments:
+    get:
+      operationId: comments_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - comments
+    parameters: []
+  /submissions:
+    get:
+      operationId: submissions_list
+      description: Get all submissions
+      parameters:
+      - name: sort
+        in: query
+        description: Sort submissions by point or newest
+        type: string
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Submission'
+        '400':
+          description: Invalid sort parameter
+      tags:
+      - Submission
+    post:
+      operationId: submissions_create
+      description: ''
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - submissions
+    parameters: []
+  /submissions/{id}:
+    get:
+      operationId: submissions_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - submissions
+    parameters:
+    - name: id
+      in: path
+      required: true
+      type: string
+  /threads:
+    get:
+      operationId: threads_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - threads
+    parameters: []
+definitions:
+  Submission:
+    required:
+    - title
+    - author
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      title:
+        title: Title
+        type: string
+        maxLength: 255
+        minLength: 1
+      url:
+        title: Url
+        type: string
+        format: uri
+        maxLength: 200
+        x-nullable: true
+      domain:
+        title: Domain
+        type: string
+        maxLength: 255
+        minLength: 1
+        x-nullable: true
+      text:
+        title: Text
+        type: string
+        x-nullable: true
+      point:
+        title: Point
+        type: integer
+        maximum: 9223372036854775807
+        minimum: -9223372036854775808
+      comment_count:
+        title: Comment count
+        type: integer
+        maximum: 9223372036854775807
+        minimum: -9223372036854775808
+      created:
+        title: Created
+        type: string
+        format: date-time
+        readOnly: true
+      author:
+        title: Author
+        type: integer
+      comments:
+        title: Comments
+        type: string
+        readOnly: true

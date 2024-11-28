@@ -18,21 +18,19 @@ from django.contrib import admin
 from django.shortcuts import redirect
 from django.urls import include, path
 from rest_framework import permissions
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import AllowAny
+
+from hacker_news.settings import openapi_info
 from news import views
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
 schema_view = get_schema_view(
-    openapi.Info(
-        title="Hacker News API Documentation",
-        default_version='v1',
-        description="Documentación de la API del proyecto",
-        terms_of_service="https://www.google.com/policies/terms/",
-        contact=openapi.Contact(email="fywang021205@gmail.com"),
-        license=openapi.License(name="MIT License"),
-    ),
+    openapi_info,
     public=True,
-    permission_classes=[permissions.AllowAny]
+    permission_classes=[AllowAny],
+    authentication_classes=[TokenAuthentication],
 )
 
 urlpatterns = [
